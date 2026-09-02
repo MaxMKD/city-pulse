@@ -1,0 +1,16 @@
+# Build output (each service also has its own, this covers root-level tooling)
+target/
+
+# IDE
+.vscode/
+.idea/
+*.iml
+
+# OS
+.DS_Store
+
+# Local environment
+.env
+
+# Personal study notes — not part of the published portfolio repo
+LESSONS_LEARNED.md

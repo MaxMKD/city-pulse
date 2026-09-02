@@ -1,0 +1,84 @@
+---
+openapi: 3.1.0
+components:
+  schemas:
+    AirQualitySummary:
+      type: object
+      properties:
+        pm25:
+          type: number
+          format: double
+        status:
+          type: string
+    CityInfo:
+      type: object
+      properties:
+        name:
+          type: string
+        country:
+          type: string
+        countryCode:
+          type: string
+    CityPulseResponse:
+      type: object
+      properties:
+        city:
+          $ref: "#/components/schemas/CityInfo"
+        score:
+          type: integer
+          format: int32
+        status:
+          type: string
+        weather:
+          $ref: "#/components/schemas/WeatherSummary"
+        airQuality:
+          $ref: "#/components/schemas/AirQualitySummary"
+        scoreBreakdown:
+          $ref: "#/components/schemas/ScoreBreakdown"
+        providers:
+          $ref: "#/components/schemas/ProviderStatus"
+    ProviderStatus:
+      type: object
+      properties:
+        weather:
+          type: string
+        airQuality:
+          type: string
+    ScoreBreakdown:
+      type: object
+      properties:
+        weather:
+          type: integer
+          format: int32
+        airQuality:
+          type: integer
+          format: int32
+    WeatherSummary:
+      type: object
+      properties:
+        temperatureCelsius:
+          type: number
+          format: double
+        condition:
+          type: string
+paths:
+  /api/v1/pulse:
+    get:
+      parameters:
+      - name: q
+        in: query
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CityPulseResponse"
+      summary: Get Pulse
+      tags:
+      - City Pulse Resource
+info:
+  title: city-pulse-service API
+  version: 1.0.0-SNAPSHOT

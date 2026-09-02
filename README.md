@@ -49,21 +49,6 @@ curl "http://localhost:8080/api/v1/pulse?q=ber"       # -> Berlin, same result a
 curl "http://localhost:8080/api/v1/pulse?q=new%20yor"  # -> New York
 ```
 
-**Why just one endpoint.** Earlier versions of this project exposed `/weather`, `/air-quality`, and
-`/cities/search` separately (and, before that, ran as four separate microservices). Both were
-deliberately consolidated: nobody calling this API wants to resolve a city, then call weather, then call
-air quality, then combine them by hand — they want a score for a city they typed. Internally, the
-weather/air-quality/city-search logic still exists as ordinary classes (`WeatherService`,
-`AirQualityService`, `CityService`) with the same separation of concerns a multi-endpoint or
-multi-service version would have — they're just not separately reachable over HTTP anymore, because
-nothing needed them to be.
-
-**Provider isolation.** Every external call (two to Open-Meteo, one to Photon) follows the same shape:
-provider JSON → a DTO matching that exact shape → an adapter that translates it (and is the only code
-that understands provider-specific details, like Open-Meteo's WMO weather codes or Photon's
-`[longitude, latitude]` GeoJSON ordering) → this service's own domain model. If a provider changed its
-JSON tomorrow, only its DTO + adapter would change — nothing else in the codebase would notice.
-
 **Partial failure.** A single Open-Meteo outage doesn't fail the whole request — weather and air-quality
 are looked up independently, and `status` tells you exactly what happened:
 
